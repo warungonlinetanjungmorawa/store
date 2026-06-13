@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang Belanja - Warung Online</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 10px; 
+            background-color: #fcfaf2; 
+        }
+        
+        .navbar { 
+            background-color: #ffc400; 
+            padding: 15px; 
+            border-radius: 8px; 
+            border-bottom: 4px solid #006633; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .navbar h1 { 
+            color: #004d26; 
+            margin: 0; 
+            font-size: 18px;
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-kembali {
+            text-decoration: none;
+            background-color: #006633;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .wadah-keranjang, .wadah-histori {
+            margin-top: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e1dbbd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .item-keranjang {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-keranjang img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .info-barang {
+            flex-grow: 1;
+        }
+
+        .info-barang h3 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .info-barang p {
+            margin: 0;
+            font-size: 13px;
+            color: #006633;
+            font-weight: bold;
+        }
+
+        .jumlah-kontrol {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-aksi {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+
+        .total-bayar {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 16px;
+            font-weight: bold;
+            color: #004d26;
+        }
+
+        .btn-wa {
+            background-color: #25D366; 
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .keranjang-kosong, .histori-kosong {
+            text-align: center;
+            padding: 30px 10px;
+            color: #888;
+        }
+
+        /* === KODE BARU: GAYA KHUSUS AREA HISTORI === */
+        .wadah-histori {
+            margin-top: 30px;
+            border-top: 4px solid #b8b08d;
+        }
+
+        .header-histori {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0e6cc;
+        }
+
+        .header-histori h2 {
+            font-size: 15px;
+            color: #004d26;
+            margin: 0;
+        }
+
+        .btn-hapus-semua {
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .kartu-histori {
+            background-color: #faf9f5;
+            border: 1px solid #e6e0ca;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .waktu-histori {
+            font-size: 11px;
+            color: #777;
+            margin-bottom: 6px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .teks-item-histori {
+            font-size: 13px;
+            color: #444;
+            margin: 3px 0;
+            padding-left: 10px;
+        }
+
+        .total-histori {
+            font-size: 13px;
+            font-weight: bold;
+            color: #006633;
+            margin-top: 8px;
+            text-align: right;
+            border-top: 1px dashed #ddd;
+            padding-top: 6px;
+        }
+
+        .btn-hapus-tunggal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 5px;
+        }
+        
+        .btn-hapus-tunggal:hover {
+            color: #cc0000;
+        }
+
+        @media (min-width: 600px) {
+            body { margin: 20px; }
+            .navbar { padding: 15px 25px; }
+            .navbar h1 { font-size: 22px; }
+            .wadah-keranjang, .wadah-histori { max-width: 600px; margin: 20px auto 0 auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>Keranjang Belanja</h1>
+        <a href="index.html" class="btn-kembali">⬅ Belanja Lagi</a>
+    </div>
+
+    <div class="wadah-keranjang">
+        <div id="list-keranjang"></div>
+
+        <div id="area-pembayaran" style="display: none;">
+            <div class="total-bayar">Total Keseluruhan: <span id="total-harga">Rp 0</span></div>
+            <button class="btn-wa" onclick="kirimWhatsApp()">📱 Kirim Pesanan via WhatsApp</button>
+        </div>
+    </div>
+
+
+    <div class="wadah-histori">
+        <div class="header-histori">
+            <h2>📜 Histori Pesanan Berhasil</h2>
+            <button id="btn-bersihkan-histori" class="btn-hapus-semua" onclick="hapusSemuaHistori()" style="display: none;">Hapus Semua</button>
+        </div>
+        <div id="list-histori">
+            </div>
+    </div>
+
+
+    <script>
+        function muatKeranjang() {
+            let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+            let listDiv = document.getElementById('list-keranjang');
+            let areaBayar = document.getElementById('area-pembayaran');
+            
+            if (keranjang.length === 0) {
+                listDiv.innerHTML = `
+                    <div class="keranjang-kosong">
+                        <h2>Keranjangmu masih kosong nih.. 🛒</h2>
+                        <p>Yuk, kembali ke beranda untuk memilih produk menarik!</p>
+                    </div>`;
+                areaBayar.style.display = "none";
+                return;
+            }
+
+            areaBayar.style.display = "block";
+            let htmlKoleksi = '';
+            let totalKeseluruhan = 0;
+
+            keranjang.forEach((item, index) => {
+                let subTotal = item.harga * item.jumlah;
+                totalKeseluruhan += subTotal;
+
+                htmlKoleksi += `
+                    <div class="item-keranjang">
+                        <img src="${item.gambar}" alt="${item.nama}">
+                        <div class="info-barang">
+                            <h3>${item.nama}</h3>
+                            <p>Rp ${item.harga.toLocaleString('id-ID')}</p>
+                        </div>
+                        <div class="jumlah-kontrol">
+                            <button class="btn-aksi" onclick="ubahJumlah(${index}, -1)">-</button>
+                            <span>${item.jumlah}</span>
+                            <button class="btn-aksi" onclick="ubahJumlah(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            listDiv.innerHTML = htmlKoleksi;
+            document.getElementById('total-harga').innerText = `Rp ${totalKeseluruhan.toLocaleString('id-ID')}`;
+        }
+
+        function ubahJumlah(index, perubahan) {
+            let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+            keranjang[index].jumlah += perubahan;
+
+            if (keranjang[index].jumlah < 1) {
+                keranjang.splice(index, 1);
+            }
+
+            localStorage.setItem('keranjang', JSON.stringify(keranjang));
+            muatKeranjang();
+        }
+
+        // === FUNGSI UTAMA: PROSES SIMPAN HISTORI SEBELUM KIRIM ===
+        function kirimWhatsApp() {
+            let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+            if (keranjang.length === 0) return;
+
+            let nomorWA = "6282174396438"; 
+            let teksKirim = `*PESANAN BARU - WARUNG ONLINE*\n`;
+            teksKirim += `-------------------------------------------\n`;
+            
+            let totalKeseluruhan = 0;
+            let dataProdukHistori = []; // Wadah sementara untuk mencatat item histori
+
+            keranjang.forEach((item, i) => {
+                let subTotal = item.harga * item.jumlah;
+                totalKeseluruhan += subTotal;
+                teksKirim += `${i+1}. *${item.nama}*\n   ${item.jumlah} pcs x Rp ${item.harga.toLocaleString('id-ID')} = Rp ${subTotal.toLocaleString('id-ID')}\n\n`;
+                
+                // Masukkan teks ringkas ke array histori
+                dataProdukHistori.push(`${item.nama} (${item.jumlah} pcs)`);
+            });
+
+            teksKirim += `-------------------------------------------\n`;
+            teksKirim += `*Total Bayar: Rp ${totalKeseluruhan.toLocaleString('id-ID')}*`;
+
+            // --- PROSES SIMPAN KE DALAM HISTORI ---
+            let histori = JSON.parse(localStorage.getItem('histori_pesanan')) || [];
+            
+            // Mengambil tanggal dan jam saat ini secara lokal di HP pembeli
+            let sekarang = new Date();
+            let waktuFormat = sekarang.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + 
+                              " - " + sekarang.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+            // Simpan data dalam bentuk objek terstruktur
+            histori.unshift({
+                waktu: waktuFormat,
+                items: dataProdukHistori,
+                total: totalKeseluruhan
+            });
+            
+            localStorage.setItem('histori_pesanan', JSON.stringify(histori));
+            // --------------------------------------
+
+            let linkWA = `https://api.whatsapp.com/send?phone=${nomorWA}&text=${encodeURIComponent(teksKirim)}`;
+
+            localStorage.removeItem('keranjang');
+            window.open(linkWA, '_blank');
+
+            muatKeranjang();
+            muatHistori(); // Perbarui daftar tampilan histori di bawah secara langsung
+        }
+
+        // === KODE BARU: LOGIK UNTUK MENGELOLA HISTORI ===
+        function muatHistori() {
+            let histori = JSON.parse(localStorage.getItem('histori_pesanan')) || [];
+            let listHistoriDiv = document.getElementById('list-histori');
+            let btnBersihkan = document.getElementById('btn-bersihkan-histori');
+
+            if (histori.length === 0) {
+                listHistoriDiv.innerHTML = `<div class="histori-kosong">Belum ada riwayat pesanan terkirim.</div>`;
+                btnBersihkan.style.display = "none";
+                return;
+            }
+
+            btnBersihkan.style.display = "block";
+            let htmlHistori = '';
+
+            histori.forEach((nota, index) => {
+                let htmlItem = '';
+                nota.items.forEach(namaBarang => {
+                    htmlItem += `<p class="teks-item-histori">• ${namaBarang}</p>`;
+                });
+
+                htmlHistori += `
+                    <div class="kartu-histori">
+                        <button class="btn-hapus-tunggal" onclick="hapusHistoriTunggal(${index})" title="Hapus riwayat ini">×</button>
+                        <span class="waktu-histori">⏱ ${nota.waktu} WIB</span>
+                        ${htmlItem}
+                        <div class="total-histori">Total Terkirim: Rp ${nota.total.toLocaleString('id-ID')}</div>
+                    </div>
+                `;
+            });
+
+            listHistoriDiv.innerHTML = htmlHistori;
+        }
+
+        // Fungsi Menghapus Satu Riwayat Tertentu
+        function hapusHistoriTunggal(index) {
+            let histori = JSON.parse(localStorage.getItem('histori_pesanan')) || [];
+            histori.splice(index, 1); // Hapus baris data berdasarkan indeksnya
+            localStorage.setItem('histori_pesanan', JSON.stringify(histori));
+            muatHistori();
+        }
+
+        // Fungsi Menghapus Seluruh Riwayat Tanpa Sisa
+        function hapusSemuaHistori() {
+            if (confirm("Apakah kamu yakin ingin menghapus seluruh riwayat pesanan?")) {
+                localStorage.removeItem('histori_pesanan');
+                muatHistori();
+            }
+        }
+
+        // Jalankan kedua fungsi utama saat halaman dibuka
+        muatKeranjang();
+        muatHistori();
+    </script>
+</body>
+</html>
