@@ -390,7 +390,9 @@
             document.getElementById('total-harga').innerText = `Rp ${totalKeseluruhan.toLocaleString('id-ID')}`;
 
             setTimeout(() => {
-                inisialisasiPeta(totalKeseluruhan);
+                inisialisasiPeta();
+                if(petaObjek !== null) {
+                    hitungJarakRuteOSRM();
             }, 100);
         }
 
@@ -612,10 +614,10 @@
 
             pinKonsumen = L.marker(koordinatWarung, { draggable: true }).addTo(petaObjek);
 
-            hitungJarakRuteOSRM(totalBelanja);
+            hitungJarakRuteOSRM();
 
             pinKonsumen.on('dragend', function (e) {
-                hitungJarakRuteOSRM(totalBelanja);
+                hitungJarakRuteOSRM();
             });
         }
 
@@ -641,7 +643,7 @@
                     petaObjek.setView(koordinatBaru, 15);
 
                     // Hitung Ulang Jarak Rute Lewat Jalan Raya
-                    hitungJarakRuteOSRM(totalBelanjaGlobal);
+                    hitungJarakRuteOSRM();
                 },
                 function (error) {
                     let pesanError = "Gagal mengambil lokasi Anda.";
@@ -654,7 +656,7 @@
             );
         }
 
-        function hitungJarakRuteOSRM(totalBelanja) {
+        function hitungJarakRuteOSRM() {
             let posisiKonsumen = pinKonsumen.getLatLng();
             
             let urlOSRM = `https://router.project-osrm.org/route/v1/driving/${koordinatWarung[1]},${koordinatWarung[0]};${posisiKonsumen.lng},${posisiKonsumen.lat}?overview=full&geometries=geojson`;
@@ -670,7 +672,7 @@
 
                         // Hitung Ongkir (Tarif Rp 1.000 / km)
                         ongkirGlobal = Math.ceil(jarakKmGlobal * 1000);
-                        let totalSemuaYgDibayar = totalBelanja + ongkirGlobal;
+                        let totalSemuaYgDibayar = totalBelanjaGlobal + ongkirGlobal;
 
                         document.getElementById('tampilan-jarak').innerText = jarakKmGlobal;
                         document.getElementById('tampilan-ongkir').innerText = `Rp ${ongkirGlobal.toLocaleString('id-ID')}`;
