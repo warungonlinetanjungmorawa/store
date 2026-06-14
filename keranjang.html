@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keranjang Belanja - Warung Online</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
     <style>
         body { 
             font-family: Arial, sans-serif; 
@@ -123,7 +127,7 @@
             color: #888;
         }
 
-        /* === KODE BARU: GAYA KHUSUS AREA HISTORI === */
+        /* AREA HISTORI: STRUK FISIK KASIR STYLE */
         .wadah-histori {
             margin-top: 30px;
             border-top: 4px solid #b8b08d;
@@ -155,54 +159,142 @@
             cursor: pointer;
         }
 
+        /* Desain Gulungan Kertas Thermal */
         .kartu-histori {
-            background-color: #faf9f5;
-            border: 1px solid #e6e0ca;
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 12px;
+            background-color: #ffffff;
+            border: 1px dashed #b5b5b5;
+            border-radius: 4px;
+            padding: 16px 12px;
+            margin-bottom: 20px;
             position: relative;
+            font-family: "Courier New", Courier, monospace; 
+            color: #111111;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+        }
+
+        .struk-judul {
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            letter-spacing: 1px;
+        }
+
+        .struk-garis {
+            border-top: 1px dashed #444;
+            margin: 6px 0;
+            height: 0;
         }
 
         .waktu-histori {
             font-size: 11px;
-            color: #777;
-            margin-bottom: 6px;
+            color: #222;
+            margin-bottom: 4px;
             display: block;
-            font-weight: bold;
+            font-family: "Courier New", Courier, monospace;
         }
 
-        .teks-item-histori {
-            font-size: 13px;
-            color: #444;
-            margin: 3px 0;
-            padding-left: 10px;
+        .blok-item-struk {
+            margin-bottom: 6px;
+            font-size: 11px;
+        }
+
+        .nama-item-struk {
+            text-transform: uppercase;
+            font-weight: bold;
+            display: block;
+        }
+
+        .rincian-item-struk {
+            display: flex;
+            justify-content: space-between;
+            padding-left: 8px;
+        }
+
+        .rincian-ongkir-struk {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-bottom: 4px;
         }
 
         .total-histori {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
-            color: #006633;
-            margin-top: 8px;
-            text-align: right;
-            border-top: 1px dashed #ddd;
-            padding-top: 6px;
+            color: #000;
+            margin-top: 6px;
+            display: flex;
+            justify-content: space-between;
+            font-family: "Courier New", Courier, monospace;
         }
 
         .btn-hapus-tunggal {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 4px;
+            right: 6px;
             background: none;
             border: none;
-            color: #aaa;
+            color: #ccc;
             cursor: pointer;
             font-size: 16px;
             padding: 0 5px;
+            font-family: Arial, sans-serif;
         }
         
         .btn-hapus-tunggal:hover {
             color: #cc0000;
+        }
+
+        /* CSS Tambahan untuk Tampilan Peta */
+        #wadah-peta {
+            margin-top: 15px;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e1dbbd;
+            text-align: left;
+        }
+        
+        /* Tombol Desain Cari Lokasi Saya */
+        .btn-gps {
+            background-color: #006633;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 8px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn-gps:hover {
+            background-color: #004d26;
+        }
+
+        #peta {
+            height: 250px;
+            width: 100%;
+            border-radius: 6px;
+            margin-top: 8px;
+            z-index: 1;
+        }
+        .info-jarak {
+            font-size: 14px;
+            font-weight: bold;
+            color: #006633;
+            margin-top: 10px;
+            background: #f0f9f4;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #006633;
+            line-height: 1.5;
         }
 
         @media (min-width: 600px) {
@@ -224,23 +316,36 @@
         <div id="list-keranjang"></div>
 
         <div id="area-pembayaran" style="display: none;">
+            <div id="wadah-peta">
+                <label style="font-weight: bold; font-size: 14px; color: #333;">📍 Tentukan Lokasi Pengiriman :</label>
+                <p style="margin: 4px 0; font-size: 11px; color: #666;">*Geser pin atau klik tombol GPS di bawah agar pin mencari posisi rumah Anda otomatis.</p>
+                
+                <button type="button" class="btn-gps" onclick="temukanLokasiSaya()">🎯 Gunakan Lokasi Saya Saat Ini</button>
+
+                <div id="peta"></div>
+                <div class="info-jarak">
+                    🏍️ Jarak Jalan Raya: <span id="tampilan-jarak">0.0</span> km <br>
+                    📦 Ongkos Kirim: <span id="tampilan-ongkir">Rp 0</span>
+                </div>
+            </div>
+
             <div class="total-bayar">Total Keseluruhan: <span id="total-harga">Rp 0</span></div>
             <button class="btn-wa" onclick="kirimWhatsApp()">📱 Kirim Pesanan via WhatsApp</button>
         </div>
     </div>
 
-
     <div class="wadah-histori">
         <div class="header-histori">
-            <h2>📜 Histori Pesanan Berhasil</h2>
+            <h2>📜 Histori Pesanan</h2>
             <button id="btn-bersihkan-histori" class="btn-hapus-semua" onclick="hapusSemuaHistori()" style="display: none;">Hapus Semua</button>
         </div>
-        <div id="list-histori">
-            </div>
+        <div id="list-histori"></div>
     </div>
 
-
     <script>
+        // Nilai Belanja Global untuk dipakai fungsi GPS
+        let totalBelanjaGlobal = 0;
+
         function muatKeranjang() {
             let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
             let listDiv = document.getElementById('list-keranjang');
@@ -281,7 +386,12 @@
             });
 
             listDiv.innerHTML = htmlKoleksi;
+            totalBelanjaGlobal = totalKeseluruhan;
             document.getElementById('total-harga').innerText = `Rp ${totalKeseluruhan.toLocaleString('id-ID')}`;
+
+            setTimeout(() => {
+                inisialisasiPeta(totalKeseluruhan);
+            }, 100);
         }
 
         function ubahJumlah(index, perubahan) {
@@ -296,47 +406,72 @@
             muatKeranjang();
         }
 
-        // === FUNGSI UTAMA: PROSES SIMPAN HISTORI SEBELUM KIRIM ===
         function kirimWhatsApp() {
             let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
             if (keranjang.length === 0) return;
 
             let nomorWA = "6282174396438"; 
-            let teksKirim = `*PESANAN BARU - WARUNG ONLINE*\n`;
-            teksKirim += `-------------------------------------------\n`;
             
-            let totalKeseluruhan = 0;
-            let dataProdukHistori = []; // Wadah sementara untuk mencatat item histori
-
-            keranjang.forEach((item, i) => {
-                let subTotal = item.harga * item.jumlah;
-                totalKeseluruhan += subTotal;
-                teksKirim += `${i+1}. *${item.nama}*\n   ${item.jumlah} pcs x Rp ${item.harga.toLocaleString('id-ID')} = Rp ${subTotal.toLocaleString('id-ID')}\n\n`;
-                
-                // Masukkan teks ringkas ke array histori
-                dataProdukHistori.push(`${item.nama} (${item.jumlah} pcs)`);
-            });
-
-            teksKirim += `-------------------------------------------\n`;
-            teksKirim += `*Total Bayar: Rp ${totalKeseluruhan.toLocaleString('id-ID')}*`;
-
-            // --- PROSES SIMPAN KE DALAM HISTORI ---
-            let histori = JSON.parse(localStorage.getItem('histori_pesanan')) || [];
-            
-            // Mengambil tanggal dan jam saat ini secara lokal di HP pembeli
             let sekarang = new Date();
             let waktuFormat = sekarang.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + 
                               " - " + sekarang.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            let idNotaOtomatis = sekarang.getTime();
 
-            // Simpan data dalam bentuk objek terstruktur
+            let teksKirim = `*🛍️ NOTA PESANAN BARU*\n`;
+            teksKirim += `==========================\n`;
+            teksKirim += `📝 No. Nota :\nTR/ID/${idNotaOtomatis}\n`;
+            teksKirim += `⏰ Waktu    :\n${waktuFormat} WIB\n`;
+            teksKirim += `==========================\n\n`;
+            teksKirim += `*🛒 DAFTAR BELANJA :*\n\n`;
+            
+            let totalKeseluruhan = 0;
+            let dataProdukHistori = []; 
+
+            keranjang.forEach((item) => {
+                let subTotal = item.harga * item.jumlah;
+                totalKeseluruhan += subTotal;
+                
+                teksKirim += `* ${item.nama.toUpperCase()}\n`;
+                teksKirim += `        └─ ${item.jumlah} pcs x Rp ${item.harga.toLocaleString('id-ID')} \n                    └─ = *Rp ${subTotal.toLocaleString('id-ID')}*\n\n`;
+                
+                dataProdukHistori.push({
+                    nama: item.nama,
+                    jumlah: item.jumlah,
+                    harga: item.harga,
+                    subtotal: subTotal
+                });
+            });
+
+            // AMBIL KOORDINAT TERAKHIR DARI PIN MERAH KONSUMEN UNTUK DIKIRIM KE WA
+            let posisiKonsumen = pinKonsumen.getLatLng();
+            let linkGoogleMaps = `https://www.google.com/maps?q=${posisiKonsumen.lat},${posisiKonsumen.lng}`;
+
+            teksKirim += `==========================\n`;
+            teksKirim += `💵 Subtotal Produk \n  └─ = *Rp ${totalKeseluruhan.toLocaleString('id-ID')}*\n`;
+            teksKirim += `🛵 Jarak Rute      \n  └─ = *${jarakKmGlobal} km*\n`;
+            teksKirim += `📦 Ongkos Kirim    \n  └─ = *Rp ${ongkirGlobal.toLocaleString('id-ID')}*\n`;
+            teksKirim += `==========================\n`;
+            
+            let totalAkhirPlusOngkir = totalKeseluruhan + ongkirGlobal;
+            teksKirim += `💰 *TOTAL AKHIR*     \n  └─ = *Rp ${totalAkhirPlusOngkir.toLocaleString('id-ID')}*\n`;
+            teksKirim += `==========================\n\n`;
+            
+            teksKirim += `📍 *LOKASI PENGIRIMAN :*\n`;
+            teksKirim += `${linkGoogleMaps}\n\n`;
+            teksKirim += `_Mohon segera diproses ya, terima kasih!_`;
+
+            let histori = JSON.parse(localStorage.getItem('histori_pesanan')) || [];
             histori.unshift({
+                idNota: idNotaOtomatis,
                 waktu: waktuFormat,
                 items: dataProdukHistori,
-                total: totalKeseluruhan
+                subtotalProduk: totalKeseluruhan,
+                jarak: jarakKmGlobal,              
+                ongkir: ongkirGlobal,             
+                total: totalAkhirPlusOngkir 
             });
             
             localStorage.setItem('histori_pesanan', JSON.stringify(histori));
-            // --------------------------------------
 
             let linkWA = `https://api.whatsapp.com/send?phone=${nomorWA}&text=${encodeURIComponent(teksKirim)}`;
 
@@ -344,10 +479,9 @@
             window.open(linkWA, '_blank');
 
             muatKeranjang();
-            muatHistori(); // Perbarui daftar tampilan histori di bawah secara langsung
+            muatHistori(); 
         }
 
-        // === KODE BARU: LOGIK UNTUK MENGELOLA HISTORI ===
         function muatHistori() {
             let histori = JSON.parse(localStorage.getItem('histori_pesanan')) || [];
             let listHistoriDiv = document.getElementById('list-histori');
@@ -364,16 +498,68 @@
 
             histori.forEach((nota, index) => {
                 let htmlItem = '';
-                nota.items.forEach(namaBarang => {
-                    htmlItem += `<p class="teks-item-histori">• ${namaBarang}</p>`;
-                });
+                
+                if (nota.items && Array.isArray(nota.items)) {
+                    nota.items.forEach(item => {
+                        let nProd = 'Produk';
+                        let qProd = 1;
+                        let hProd = 0;
+                        let sProd = 0;
+
+                        if (typeof item === 'object') {
+                            nProd = item.nama || 'Produk';
+                            qProd = item.jumlah || 1;
+                            hProd = item.harga || 0;
+                            sProd = item.subtotal || (qProd * hProd);
+                        }
+
+                        htmlItem += `
+                            <div class="blok-item-struk">
+                                <span class="nama-item-struk">${nProd}</span>
+                                <div class="rincian-item-struk">
+                                    <span>${qProd} pcs ${hProd > 0 ? 'x ' + hProd.toLocaleString('id-ID') : ''}</span>
+                                    <span>Rp ${sProd.toLocaleString('id-ID')}</span>
+                                </div>
+                            </div>`;
+                    });
+                }
+
+                let jarakTampil = nota.jarak !== undefined ? nota.jarak : 0;
+                let ongkirTampil = nota.ongkir !== undefined ? nota.ongkir : 0;
+                let subtotalTampil = nota.subtotalProduk !== undefined ? nota.subtotalProduk : (nota.total - ongkirTampil);
 
                 htmlHistori += `
                     <div class="kartu-histori">
                         <button class="btn-hapus-tunggal" onclick="hapusHistoriTunggal(${index})" title="Hapus riwayat ini">×</button>
-                        <span class="waktu-histori">⏱ ${nota.waktu} WIB</span>
+                        <div class="struk-judul">WARUNG ONLINE</div>
+                        <div class="struk-garis"></div>
+                        <span class="waktu-histori">WAKTU : ${nota.waktu} WIB</span>
+                        <span class="waktu-histori">NO.   : TR/ID/${nota.idNota || index}</span>
+                        <div class="struk-garis"></div>
+                        
                         ${htmlItem}
-                        <div class="total-histori">Total Terkirim: Rp ${nota.total.toLocaleString('id-ID')}</div>
+                        
+                        <div class="struk-garis"></div>
+                        <div class="rincian-ongkir-struk">
+                            <span>SUBTOTAL PRODUK:</span>
+                            <span>Rp ${subtotalTampil.toLocaleString('id-ID')}</span>
+                        </div>
+                        <div class="rincian-ongkir-struk">
+                            <span>JARAK RUTE:</span>
+                            <span>${jarakTampil} km</span>
+                        </div>
+                        <div class="rincian-ongkir-struk">
+                            <span>ONGKOS KIRIM:</span>
+                            <span>Rp ${ongkirTampil.toLocaleString('id-ID')}</span>
+                        </div>
+                        <div class="struk-garis"></div>
+                        
+                        <div class="total-histori">
+                            <span>TOTAL AKHIR:</span>
+                            <span>Rp ${nota.total.toLocaleString('id-ID')}</span>
+                        </div>
+                        <div class="struk-garis"></div>
+                        <div style="text-align: center; font-size: 10px; margin-top: 4px;">*** TERIMA KASIH ***</div>
                     </div>
                 `;
             });
@@ -381,15 +567,13 @@
             listHistoriDiv.innerHTML = htmlHistori;
         }
 
-        // Fungsi Menghapus Satu Riwayat Tertentu
         function hapusHistoriTunggal(index) {
             let histori = JSON.parse(localStorage.getItem('histori_pesanan')) || [];
-            histori.splice(index, 1); // Hapus baris data berdasarkan indeksnya
+            histori.splice(index, 1); 
             localStorage.setItem('histori_pesanan', JSON.stringify(histori));
             muatHistori();
         }
 
-        // Fungsi Menghapus Seluruh Riwayat Tanpa Sisa
         function hapusSemuaHistori() {
             if (confirm("Apakah kamu yakin ingin menghapus seluruh riwayat pesanan?")) {
                 localStorage.removeItem('histori_pesanan');
@@ -397,7 +581,114 @@
             }
         }
 
-        // Jalankan kedua fungsi utama saat halaman dibuka
+        // ===================================================================
+        // LOGIKA UTAMA PETA JALAN RAYA OSRM & LEAFLET
+        let petaObjek = null;
+        let pinKonsumen = null;
+        let garisRuteJalan = null; 
+        let jarakKmGlobal = 0;
+        let ongkirGlobal = 0;
+
+        // KOORDINAT WARUNG ASLI
+        const koordinatWarung = [3.523517616240088, 98.77044226543813]; 
+
+        function inisialisasiPeta(totalBelanja) {
+            if (petaObjek !== null) return; 
+
+            petaObjek = L.map('peta').setView(koordinatWarung, 14);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(petaObjek);
+
+            let iconWarung = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+            });
+
+            L.marker(koordinatWarung, {icon: iconWarung}).addTo(petaObjek)
+                .bindPopup('<b>Warung Utama Kami</b>').openPopup();
+
+            pinKonsumen = L.marker(koordinatWarung, { draggable: true }).addTo(petaObjek);
+
+            hitungJarakRuteOSRM(totalBelanja);
+
+            pinKonsumen.on('dragend', function (e) {
+                hitungJarakRuteOSRM(totalBelanja);
+            });
+        }
+
+        // FUNGSI BARU: MENGAMBIL TITIK KOORDINAT GPS HP OTOMATIS
+        function temukanLokasiSaya() {
+            if (!navigator.geolocation) {
+                alert("Maaf, browser Anda tidak mendukung pencarian lokasi GPS otomatis.");
+                return;
+            }
+
+            alert("Mencari lokasi Anda... Mohon izinkan akses GPS pada layar jika diminta.");
+
+            navigator.geolocation.getCurrentPosition(
+                function (posisi) {
+                    let latGPS = posisi.coords.latitude;
+                    let lngGPS = posisi.coords.longitude;
+                    let koordinatBaru = new L.LatLng(latGPS, lngGPS);
+
+                    // Pindahkan Pin Merah ke Lokasi GPS Konsumen
+                    pinKonsumen.setLatLng(koordinatBaru);
+                    
+                    // Tengahkan Layar Peta ke Lokasi Baru
+                    petaObjek.setView(koordinatBaru, 15);
+
+                    // Hitung Ulang Jarak Rute Lewat Jalan Raya
+                    hitungJarakRuteOSRM(totalBelanjaGlobal);
+                },
+                function (error) {
+                    let pesanError = "Gagal mengambil lokasi Anda.";
+                    if (error.code === error.PERMISSION_DENIED) {
+                        pesanError = "Akses GPS ditolak. Silakan aktifkan izin lokasi di browser Anda atau geser pin secara manual.";
+                    }
+                    alert(pesanError);
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+
+        function hitungJarakRuteOSRM(totalBelanja) {
+            let posisiKonsumen = pinKonsumen.getLatLng();
+            
+            let urlOSRM = `https://router.project-osrm.org/route/v1/driving/${koordinatWarung[1]},${koordinatWarung[0]};${posisiKonsumen.lng},${posisiKonsumen.lat}?overview=full&geometries=geojson`;
+
+            fetch(urlOSRM)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 'Ok' && data.routes.length > 0) {
+                        let ruteTerpilih = data.routes[0];
+                        let jarakMeter = ruteTerpilih.distance; 
+                        
+                        jarakKmGlobal = parseFloat((jarakMeter / 1000).toFixed(1));
+
+                        // Hitung Ongkir (Tarif Rp 1.000 / km)
+                        ongkirGlobal = Math.ceil(jarakKmGlobal * 1000);
+                        let totalSemuaYgDibayar = totalBelanja + ongkirGlobal;
+
+                        document.getElementById('tampilan-jarak').innerText = jarakKmGlobal;
+                        document.getElementById('tampilan-ongkir').innerText = `Rp ${ongkirGlobal.toLocaleString('id-ID')}`;
+                        document.getElementById('total-harga').innerText = `Rp ${totalSemuaYgDibayar.toLocaleString('id-ID')}`;
+
+                        if (garisRuteJalan !== null) {
+                            petaObjek.removeLayer(garisRuteJalan);
+                        }
+
+                        let koordinatJalan = ruteTerpilih.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+                        garisRuteJalan = L.polyline(koordinatJalan, { color: '#006633', weight: 4, opacity: 0.7 }).addTo(petaObjek);
+                    }
+                })
+                .catch(err => {
+                    console.log("Gagal memuat rute jalan raya OSRM.", err);
+                });
+        }
+
         muatKeranjang();
         muatHistori();
     </script>
