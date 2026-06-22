@@ -9,12 +9,13 @@
             font-family: Arial, sans-serif; 
             margin: 10px; 
             background-color: #fcfaf2; 
+            overflow-x: hidden; 
         }
         
         .navbar { 
             display: flex; 
             flex-direction: column;
-            gap: 10px;
+            gap: 0; 
             background-color: #ffc400; 
             padding: 12px 15px; 
             border-radius: 8px; 
@@ -32,29 +33,155 @@
             width: 100%;
         }
 
+        .navbar-logo {
+            height: 35px; 
+            width: auto;
+            border-radius: 50%; 
+            border: 2px solid #006633; 
+            object-fit: cover;
+            margin-right: 10px; 
+            cursor: pointer; 
+            transition: transform 0.2s ease;
+        }
+
+        .navbar-logo:hover {
+            transform: scale(1.08); 
+        }
+
         .navbar h1 {
             color: #004d26;
             margin: 0;
             font-size: 18px; 
             font-weight: bold;
             text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
-            max-width: 75%; 
+            max-width: 80%; 
+        }
+
+        /* --- MODERNISASI TOMBOL & ICON CARI --- */
+        .btn-toggle-cari {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        
+        .btn-toggle-cari:hover {
+            background-color: rgba(0, 102, 51, 0.1);
+            transform: scale(1.1);
+        }
+
+        .icon-svg-cari {
+            width: 22px;
+            height: 22px;
+            transition: stroke 0.2s;
         }
 
         .search-container {
             width: 100%;
+            max-height: 0; 
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.3s ease-out, opacity 0.2s ease, margin-top 0.3s ease;
             display: flex;
             align-items: center;
+        }
+
+        .search-container.buka {
+            max-height: 50px; 
+            opacity: 1;
+            margin-top: 10px;
         }
 
         .input-pencarian {
             width: 100%;
             padding: 10px 15px;
             font-size: 14px;
-            border: 1px solid #006633;
-            border-radius: 20px; 
+            border: 2px solid #006633;
+            border-radius: 8px; 
             outline: none;
             box-sizing: border-box;
+            background-color: #ffffff;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-pencarian:focus {
+            border-color: #004d26;
+            box-shadow: 0 0 5px rgba(0, 102, 51, 0.2);
+        }
+
+        /* --- MODERNISASI GELEMBUNG KERANJANG PREMIUM --- */
+        .gelembung-keranjang {
+            position: fixed;
+            width: 52px;        
+            height: 52px;       
+            background: linear-gradient(135deg, #ffc400, #ffa200);
+            border: 2px solid #006633;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0, 61, 38, 0.2), 0 2px 5px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999; 
+            cursor: grab;
+            user-select: none;
+            touch-action: none; 
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+        }
+
+        .gelembung-keranjang:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(0, 61, 38, 0.3);
+        }
+
+        .gelembung-keranjang:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .icon-isi-gelembung {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .icon-svg-keranjang {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Penyesuaian posisi badge jumlah agar presisi dengan SVG */
+        .badge-jumlah {
+            position: absolute;
+            top: -2px;         
+            right: -2px;       
+            background-color: #006633; 
+            color: white;              
+            font-size: 10px;     
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            min-width: 18px;    
+            height: 18px;       
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%; 
+            border: 1.5px solid #ffc400; 
+            z-index: 10;       
+            transition: transform 0.2s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .badge-jumlah.pop {
+            transform: scale(1.4);
         }
 
         .kelompok-kategori {
@@ -94,7 +221,7 @@
             flex-direction: column;
             justify-content: space-between;
             width: 140px;                 
-            flex-shrink: 0;               
+            flex-shrink: 0;                
             scroll-snap-align: start;     
         }
 
@@ -125,6 +252,7 @@
             object-fit: cover; 
             scroll-snap-align: start; 
             border-radius: 5px;
+            cursor: pointer;
         }
 
         .titik-container {
@@ -177,44 +305,6 @@
             font-weight: bold; 
             font-size: 12px;
         }
-        
-        .btn-icon-keranjang {
-            position: relative; 
-            font-size: 28px; 
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-icon-keranjang::before {
-            content: "🛒"; 
-            filter: sepia(100%) saturate(2000%) hue-rotate(80deg) brightness(30%) contrast(150%);
-        }
-
-        .badge-jumlah {
-            position: absolute;
-            top: -4px;         
-            right: -8px;       
-            background-color: #006633; 
-            color: white;              
-            font-size: 10px;   
-            font-family: Arial, sans-serif;
-            font-weight: bold;
-            min-width: 16px;   
-            height: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%; 
-            border: 1.5px solid #ffc400; 
-            z-index: 10;       
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .badge-jumlah.pop {
-            transform: scale(1.4);
-        }
 
         #pesan-kosong {
             text-align: center;
@@ -224,25 +314,143 @@
             width: 100%;
         }
 
-        .bola-terbang {
+        .gambar-terbang {
             position: fixed;
-            width: 20px;
-            height: 20px;
-            background-color: #006633; 
-            border-radius: 50%;
             z-index: 9999;
             pointer-events: none; 
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); 
-            transform: translate(-50%, -50%) scale(1);
+            object-fit: cover;
+            border-radius: 50%; 
+            box-shadow: 0 0 15px #00ff66, 0 0 25px #ffc400; 
+            transition: all 0.85s cubic-bezier(0.25, 1, 0.5, 1); 
+            transform: translate(-30%, -50%) scale(1);
             opacity: 1;
+        }
+
+        #canvas-efek {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9998; 
+            pointer-events: none;
+        }
+
+        .modal-zoom-produk, .modal-zoom-logo {
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .konten-modal-zoom {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .tombol-tutup-zoom {
+            position: absolute;
+            top: 5px;
+            right: 15px;
+            font-size: 30px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .tombol-tutup-zoom:hover {
+            color: #cc0000;
+        }
+
+        .layout-detail-zoom {
+            margin-top: 15px;
+        }
+
+        .slider-foto-zoom {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            width: 100%;
+            height: 250px;
+            border-radius: 8px;
+            scrollbar-width: none;
+        }
+
+        .slider-foto-zoom::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slider-foto-zoom img {
+            width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+            object-fit: cover;
+            scroll-snap-align: start;
+        }
+
+        .layout-detail-zoom h2 {
+            font-size: 16px;
+            color: #333;
+            margin: 15px 0 5px 0;
+        }
+
+        .layout-detail-zoom .harga-zoom {
+            color: #006633;
+            font-weight: bold;
+            font-size: 15px;
+            margin: 0 0 15px 0;
+        }
+
+        .gambar-logo-besar {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 50%; 
+            border: 4px solid #ffc400;
+            margin: 10px auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .teks-welcome {
+            font-size: 24px;
+            font-weight: bold;
+            color: #006633;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .teks-sub-welcome {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
         }
 
         @media (min-width: 600px) {
             body { margin: 20px; }
-            .navbar { padding: 15px 25px; flex-direction: row; justify-content: space-between; gap: 20px; }
-            .navbar-atas { width: auto; gap: 20px; }
+            .navbar { padding: 15px 25px; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; }
             .navbar h1 { font-size: 24px; max-width: 100%; }
-            .search-container { width: 300px; } 
+            
+            .btn-toggle-cari { display: none; }
+            .search-container { width: 300px; max-height: none !important; opacity: 1 !important; overflow: visible; }
+            .search-container.buka { margin-top: 0; }
             
             .baris-produk-slide { 
                 display: grid;
@@ -255,251 +463,439 @@
             .slider-foto { height: 140px; } 
             .card-produk h3 { font-size: 15px; height: auto; }
             .harga { font-size: 15px; }
-            .btn-icon-keranjang { font-size: 32px; }
-            .badge-jumlah { font-size: 11px; min-width: 18px; height: 18px; top: -2px; }
+            
+            /* Penyesuaian ukuran SVG Keranjang di PC */
+            .gelembung-keranjang { width: 58px; height: 58px; }
+            .icon-svg-keranjang { width: 26px; height: 26px; }
+            .badge-jumlah { font-size: 11px; min-width: 20px; height: 20px; top: -1px; right: -1px; }
+            
+            .navbar-logo { height: 42px; }
+            .gambar-logo-besar { width: 250px; height: 250px; }
+        }
+		
+        /* Styling tombol X di dalam input */
+        .wrapper-input-cari {
+            position: relative;
+            width: 100%;
+        }
+
+        .btn-tutup-cari {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #999;
+            padding: 0 5px;
+        }
+
+        .btn-tutup-cari:hover {
+            color: #cc0000;
         }
     </style>
 </head>
 <body>
 
+    <canvas id="canvas-efek"></canvas>
+
     <div class="navbar">
         <div class="navbar-atas">
-            <h1>Warung Online Tanjung Morawa</h1>
-            <a href="keranjang.html" class="btn-icon-keranjang" id="target-keranjang">
-                <span id="total-item" class="badge-jumlah">0</span>
-            </a>
+            <div style="display: flex; align-items: center; flex-grow: 1;">
+                <img src="LOGO.png" alt="Logo Warung" class="navbar-logo" onclick="bukaModalLogo()">
+                <h1>Warung Online Tanjung Morawa</h1>
+            </div>
+            <button class="btn-toggle-cari" onclick="toggleKotakCari(event)" aria-label="Cari Produk">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#004d26" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-svg-cari">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
         </div>
-        <div class="search-container">
-            <input type="text" id="input-cari" class="input-pencarian" placeholder="Cari produk di warung..." onkeyup="cariProduk()">
+		
+        <div id="wadah-cari" class="search-container">
+            <div class="wrapper-input-cari">
+                <input type="text" id="input-cari" class="input-pencarian" placeholder="Cari produk...">
+                <button id="btn-x" class="btn-tutup-cari" onclick="aksiTombolX()">✕</button>
+            </div>
         </div>
     </div>
 
-    <div id="pesan-kosong">Produk yang kamu cari tidak ditemukan nih.. 🔍</div>
+    <div id="gelembung-keranjang" class="gelembung-keranjang">
+        <a href="keranjang.html" class="icon-isi-gelembung" id="target-keranjang" onclick="intersepsiKlikGelembung(event)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#004d26" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" class="icon-svg-keranjang">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span id="total-item" class="badge-jumlah">0</span>
+        </a>
+    </div>
+
+    <div id="pesan-kosong">Produk yang kamu cari tidak ditemukan nih.. 🤷🏻</div>
 
     <div class="kelompok-kategori wadah-kategori">
         <h2>👟 Kelompok Sepatu</h2>
         <div class="baris-produk-slide">
-            
             <div class="card-produk">
                 <div class="wrapper-slider">
                     <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" alt="Sepatu Merah">
-                        <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400" alt="Sepatu Merah Detail">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" alt="Sepatu Merah" onclick="bukaModalDetail('Sepatu Keren Merah', 'Rp 150.000', ['https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400', 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400'], 1, 150000)">
+                        <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400" alt="Sepatu Merah Detail" onclick="bukaModalDetail('Sepatu Keren Merah', 'Rp 150.000', ['https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400', 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400'], 1, 150000)">
                     </div>
                     <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
                 </div>
                 <h3>Sepatu Keren Merah</h3>
                 <p class="harga">Rp 150.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 1, 'Sepatu Keren Merah', 150000, 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100')">+ Keranjang</button>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 1, 'Sepatu Keren Merah', 150000, 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400')">+ Keranjang</button>
             </div>
-
             <div class="card-produk">
                 <div class="wrapper-slider">
                     <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400" alt="Sepatu Casual">
-                        <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400" alt="Sepatu Casual Detail">
+                        <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400" alt="Sepatu Casual" onclick="bukaModalDetail('Sepatu Sport Casual', 'Rp 195.000', ['https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400', 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400'], 2, 195000)">
+                        <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400" alt="Sepatu Casual Detail" onclick="bukaModalDetail('Sepatu Sport Casual', 'Rp 195.000', ['https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400', 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400'], 2, 195000)">
                     </div>
                     <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
                 </div>
                 <h3>Sepatu Sport Casual</h3>
                 <p class="harga">Rp 195.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 2, 'Sepatu Sport Casual', 195000, 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=100')">+ Keranjang</button>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 2, 'Sepatu Sport Casual', 195000, 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400')">+ Keranjang</button>
             </div>
-
             <div class="card-produk">
                 <div class="wrapper-slider">
                     <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400" alt="Sepatu Putih">
-                        <img src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=400" alt="Sepatu Putih Detail">
+                        <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400" alt="Sepatu Putih" onclick="bukaModalDetail('Sneakers Putih Bersih', 'Rp 210.000', ['https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400', 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400'], 3, 210000)">
+                        <img src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=400" alt="Sepatu Putih Detail" onclick="bukaModalDetail('Sneakers Putih Bersih', 'Rp 210.000', ['https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400', 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400'], 3, 210000)">
                     </div>
                     <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
                 </div>
                 <h3>Sneakers Putih Bersih</h3>
                 <p class="harga">Rp 210.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 3, 'Sneakers Putih Bersih', 210000, 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=100')">+ Keranjang</button>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 3, 'Sneakers Putih Bersih', 210000, 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400')">+ Keranjang</button>
             </div>
-
             <div class="card-produk">
                 <div class="wrapper-slider">
                     <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=400" alt="Sepatu Vans">
-                        <img src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=400" alt="Sepatu Vans Detail">
+                        <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400" alt="Sepatu Putih" onclick="bukaModalDetail('Sneakers Putih Bersih', 'Rp 210.000', ['https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400', 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400'], 3, 210000)">
+                        <img src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=400" alt="Sepatu Putih Detail" onclick="bukaModalDetail('Sneakers Putih Bersih', 'Rp 210.000', ['https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400', 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400'], 3, 210000)">
                     </div>
                     <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
                 </div>
-                <h3>Sepatu Kain Klasik</h3>
-                <p class="harga">Rp 135.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 4, 'Sepatu Kain Klasik', 135000, 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=100')">+ Keranjang</button>
+                <h3>Sneakers Putih Bersih 001</h3>
+                <p class="harga">Rp 210.000</p>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 4, 'Sneakers Putih Bersih', 210000, 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400')">+ Keranjang</button>
             </div>
-
             <div class="card-produk">
                 <div class="wrapper-slider">
                     <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=400" alt="Sepatu Hitam">
-                        <img src="https://images.unsplash.com/photo-1575537302964-96cd47c06b1b?w=400" alt="Sepatu Hitam Detail">
+                        <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400" alt="Sepatu Putih" onclick="bukaModalDetail('Sneakers Putih Bersih', 'Rp 210.000', ['https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400', 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400'], 3, 210000)">
+                        <img src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=400" alt="Sepatu Putih Detail" onclick="bukaModalDetail('Sneakers Putih Bersih', 'Rp 210.000', ['https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400', 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400'], 3, 210000)">
                     </div>
                     <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
                 </div>
-                <h3>Sepatu Running Pro</h3>
-                <p class="harga">Rp 245.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 5, 'Sepatu Running Pro', 245000, 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400')">+ Keranjang</button>
+                <h3>Sneakers Putih Bersih 002</h3>
+                <p class="harga">Rp 210.000</p>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 5, 'Sneakers Putih Bersih', 210000, 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400')">+ Keranjang</button>
             </div>
-
+            <div class="card-produk">
+                <div class="wrapper-slider">
+                    <div class="slider-foto" onscroll="updateTitik(this)">
+                        <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400" alt="Sepatu Putih" onclick="bukaModalDetail('Sneakers Putih Bersih', 'Rp 210.000', ['https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400', 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400'], 3, 210000)">
+                        <img src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=400" alt="Sepatu Putih Detail" onclick="bukaModalDetail('Sneakers Putih Bersih', 'Rp 210.000', ['https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400', 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400'], 3, 210000)">
+                    </div>
+                    <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
+                </div>
+                <h3>Sneakers Putih Bersih 003</h3>
+                <p class="harga">Rp 210.000</p>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 6, 'Sneakers Putih Bersih', 210000, 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400')">+ Keranjang</button>
+            </div>
+            <div class="card-produk">
+                <div class="wrapper-slider">
+                    <div class="slider-foto" onscroll="updateTitik(this)">
+                        <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400" alt="Sepatu Putih" onclick="bukaModalDetail('Sneakers Putih Bersih', 'Rp 210.000', ['https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400', 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400'], 3, 210000)">
+                        <img src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=400" alt="Sepatu Putih Detail" onclick="bukaModalDetail('Sneakers Putih Bersih', 'Rp 210.000', ['https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400', 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400'], 3, 210000)">
+                    </div>
+                    <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
+                </div>
+                <h3>Sneakers Putih Bersih 004</h3>
+                <p class="harga">Rp 210.000</p>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 7, 'Sneakers Putih Bersih', 210000, 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400')">+ Keranjang</button>
+            </div>
+            <div class="card-produk">
+                <div class="wrapper-slider">
+                    <div class="slider-foto" onscroll="updateTitik(this)">
+                        <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400" alt="Sepatu Putih" onclick="bukaModalDetail('Sneakers Putih Bersih', 'Rp 210.000', ['https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400', 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400'], 3, 210000)">
+                        <img src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=400" alt="Sepatu Putih Detail" onclick="bukaModalDetail('Sneakers Putih Bersih', 'Rp 210.000', ['https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400', 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400'], 3, 210000)">
+                    </div>
+                    <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
+                </div>
+                <h3>Sneakers Putih Bersih 005</h3>
+                <p class="harga">Rp 210.000</p>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 8, 'Sneakers Putih Bersih', 210000, 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400')">+ Keranjang</button>
+            </div>
         </div>
     </div>
 
     <div class="kelompok-kategori wadah-kategori">
         <h2>⌚ Kelompok Jam</h2>
         <div class="baris-produk-slide">
-            
             <div class="card-produk">
                 <div class="wrapper-slider">
                     <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" alt="Jam Putih">
-                        <img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=400" alt="Jam Putih Detail">
+                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" alt="Jam Putih" onclick="bukaModalDetail('Jam Tangan Minimalis', 'Rp 300.000', ['https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400', 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=400'], 6, 300000)">
+                        <img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=400" alt="Jam Putih Detail" onclick="bukaModalDetail('Jam Tangan Minimalis', 'Rp 300.000', ['https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400', 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=400'], 6, 300000)">
                     </div>
                     <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
                 </div>
                 <h3>Jam Tangan Minimalis</h3>
                 <p class="harga">Rp 300.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 6, 'Jam Tangan Minimalis', 300000, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100')">+ Keranjang</button>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 26, 'Jam Tangan Minimalis', 300000, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400')">+ Keranjang</button>
             </div>
-
             <div class="card-produk">
                 <div class="wrapper-slider">
                     <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=400" alt="Jam Kulit">
-                        <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400" alt="Jam Kulit Detail">
+                        <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=400" alt="Jam Kulit" onclick="bukaModalDetail('Jam Tangan Tali Kulit', 'Rp 275.000', ['https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=400', 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400'], 7, 275000)">
+                        <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400" alt="Jam Kulit Detail" onclick="bukaModalDetail('Jam Tangan Tali Kulit', 'Rp 275.000', ['https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=400', 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400'], 7, 275000)">
                     </div>
                     <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
                 </div>
                 <h3>Jam Tangan Tali Kulit</h3>
                 <p class="harga">Rp 275.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 7, 'Jam Tangan Tali Kulit', 275000, 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=100')">+ Keranjang</button>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 27, 'Jam Tangan Tali Kulit', 275000, 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=400')">+ Keranjang</button>
             </div>
-
-            <div class="card-produk">
-                <div class="wrapper-slider">
-                    <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400" alt="Smartwatch">
-                        <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=400" alt="Smartwatch Detail">
-                    </div>
-                    <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
-                </div>
-                <h3>Smartwatch Digital</h3>
-                <p class="harga">Rp 450.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 8, 'Smartwatch Digital', 450000, 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=100')">+ Keranjang</button>
-            </div>
-
-            <div class="card-produk">
-                <div class="wrapper-slider">
-                    <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=400" alt="Jam Luxury">
-                        <img src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=400" alt="Jam Luxury Detail">
-                    </div>
-                    <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
-                </div>
-                <h3>Jam Mewah Steel</h3>
-                <p class="harga">Rp 650.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 9, 'Jam Mewah Steel', 650000, 'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=100')">+ Keranjang</button>
-            </div>
-
-            <div class="card-produk">
-                <div class="wrapper-slider">
-                    <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=400" alt="Jam Sport">
-                        <img src="https://images.unsplash.com/photo-1622434641406-a158123450f9?w=400" alt="Jam Sport Detail">
-                    </div>
-                    <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
-                </div>
-                <h3>Jam Sport Anti Air</h3>
-                <p class="harga">Rp 185.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 10, 'Jam Sport Anti Air', 185000, 'https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=100')">+ Keranjang</button>
-            </div>
-
         </div>
     </div>
 
     <div class="kelompok-kategori wadah-kategori">
-        <h2>🎧 Kelompok Earphone</h2>
+        <h2>🍔 Kelompok Makanan</h2>
         <div class="baris-produk-slide">
-            
             <div class="card-produk">
                 <div class="wrapper-slider">
                     <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" alt="Headphone Basstebal">
-                        <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400" alt="Headphone Detail">
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400" alt="Burger Krispi" onclick="bukaModalDetail('Burger Krispi Jumbo', 'Rp 25.000', ['https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400', 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=400'], 17, 25000)">
+                        <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=400" alt="Burger Krispi Detail" onclick="bukaModalDetail('Burger Krispi Jumbo', 'Rp 25.000', ['https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400', 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=400'], 17, 25000)">
                     </div>
                     <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
                 </div>
-                <h3>Headphone Basstebal</h3>
-                <p class="harga">Rp 250.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 11, 'Headphone Basstebal', 250000, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100')">+ Keranjang</button>
+                <h3>Burger Krispi Jumbo</h3>
+                <p class="harga">Rp 25.000</p>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 17, 'Burger Krispi Jumbo', 25000, 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400')">+ Keranjang</button>
             </div>
-
             <div class="card-produk">
                 <div class="wrapper-slider">
                     <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1577174881658-0f30ed549adc?w=400" alt="Earphone Putih">
-                        <img src="https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=400" alt="Earphone Putih Detail">
+                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400" alt="Pizza" onclick="bukaModalDetail('Pizza Meat Lovers', 'Rp 65.000', ['https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400', 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400'], 18, 65000)">
+                        <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400" alt="Pizza Detail" onclick="bukaModalDetail('Pizza Meat Lovers', 'Rp 65.000', ['https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400', 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400'], 18, 65000)">
                     </div>
                     <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
                 </div>
-                <h3>TWS Wireless Putih</h3>
-                <p class="harga">Rp 175.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 12, 'TWS Wireless Putih', 175000, 'https://images.unsplash.com/photo-1577174881658-0f30ed549adc?w=100')">+ Keranjang</button>
+                <h3>Pizza Meat Lovers</h3>
+                <p class="harga">Rp 65.000</p>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 18, 'Pizza Meat Lovers', 65000, 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400')">+ Keranjang</button>
             </div>
-
             <div class="card-produk">
                 <div class="wrapper-slider">
                     <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400" alt="TWS Hitam">
-                        <img src="https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=400" alt="TWS Hitam Detail">
+                        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400" alt="Martabak" onclick="bukaModalDetail('Martabak Terang Bulan', 'Rp 30.000', ['https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400', 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400'], 19, 30000)">
+                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400" alt="Martabak Detail" onclick="bukaModalDetail('Martabak Terang Bulan', 'Rp 30.000', ['https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400', 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400'], 19, 30000)">
                     </div>
                     <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
                 </div>
-                <h3>TWS Pro Hitam</h3>
-                <p class="harga">Rp 220.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 13, 'TWS Pro Hitam', 220000, 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=100')">+ Keranjang</button>
+                <h3>Martabak Terang Bulan</h3>
+                <p class="harga">Rp 30.000</p>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 19, 'Martabak Terang Bulan', 30000, 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400')">+ Keranjang</button>
             </div>
+        </div>
+    </div>
 
+    <div class="kelompok-kategori wadah-kategori">
+        <h2>🥤 Kelompok Minuman</h2>
+        <div class="baris-produk-slide">
             <div class="card-produk">
                 <div class="wrapper-slider">
                     <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=400" alt="Headphone Merah">
-                        <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400" alt="Headphone Merah Detail">
+                        <img src="https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=400" alt="Es Kopi" onclick="bukaModalDetail('Es Kopi Susu Aren', 'Rp 15.000', ['https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=400', 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400'], 20, 15000)">
+                        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400" alt="Es Kopi Detail" onclick="bukaModalDetail('Es Kopi Susu Aren', 'Rp 15.000', ['https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=400', 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400'], 20, 15000)">
                     </div>
                     <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
                 </div>
-                <h3>Headphone Gaming Red</h3>
-                <p class="harga">Rp 315.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 14, 'Headphone Gaming Red', 315000, 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=100')">+ Keranjang</button>
+                <h3>Es Kopi Susu Aren</h3>
+                <p class="harga">Rp 15.000</p>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 20, 'Es Kopi Susu Aren', 15000, 'https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=400')">+ Keranjang</button>
             </div>
-
             <div class="card-produk">
                 <div class="wrapper-slider">
                     <div class="slider-foto" onscroll="updateTitik(this)">
-                        <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400" alt="Headphone ANC">
-                        <img src="https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=400" alt="Headphone ANC Detail">
+                        <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400" alt="Boba" onclick="bukaModalDetail('Boba Milk Tea Gula', 'Rp 18.000', ['https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400', 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400'], 21, 18000)">
+                        <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400" alt="Boba Detail" onclick="bukaModalDetail('Boba Milk Tea Gula', 'Rp 18.000', ['https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400', 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400'], 21, 18000)">
                     </div>
                     <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
                 </div>
-                <h3>Headset Premium Bass</h3>
-                <p class="harga">Rp 520.000</p>
-                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 15, 'Headset Premium Bass', 520000, 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=100')">+ Keranjang</button>
+                <h3>Boba Milk Tea Gula</h3>
+                <p class="harga">Rp 18.000</p>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 21, 'Boba Milk Tea Gula', 18000, 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400')">+ Keranjang</button>
             </div>
+            <div class="card-produk">
+                <div class="wrapper-slider">
+                    <div class="slider-foto" onscroll="updateTitik(this)">
+                        <img src="https://images.unsplash.com/photo-1536935338788-846bb9981813?w=400" alt="Juice" onclick="bukaModalDetail('Smoothie Mangga Segar', 'Rp 14.000', ['https://images.unsplash.com/photo-1536935338788-846bb9981813?w=400', 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400'], 22, 14000)">
+                        <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400" alt="Juice Detail" onclick="bukaModalDetail('Smoothie Mangga Segar', 'Rp 14.000', ['https://images.unsplash.com/photo-1536935338788-846bb9981813?w=400', 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400'], 22, 14000)">
+                    </div>
+                    <div class="titik-container"><span class="titik aktif"></span><span class="titik"></span></div>
+                </div>
+                <h3>Smoothie Mangga Segar</h3>
+                <p class="harga">Rp 14.000</p>
+                <button class="btn-keranjang" onclick="tambahKeKeranjang(event, 22, 'Smoothie Mangga Segar', 14000, 'https://images.unsplash.com/photo-1536935338788-846bb9981813?w=400')">+ Keranjang</button>
+            </div>
+        </div>
+    </div>
 
+    <div id="modal-zoom-produk" class="modal-zoom-produk">
+        <div class="konten-modal-zoom">
+            <span class="tombol-tutup-zoom" onclick="tutupModalDetail()">&times;</span>
+            <div class="layout-detail-zoom">
+                <div class="wrapper-slider">
+                    <div id="modal-slider-foto" class="slider-foto-zoom" onscroll="updateTitik(this)"></div>
+                    <div id="modal-titik-container" class="titik-container"></div>
+                </div>
+                <h2 id="modal-nama">Nama Barang</h2>
+                <p id="modal-harga" class="harga-zoom">Rp 0</p>
+                <button id="modal-btn-keranjang" class="btn-keranjang" style="padding: 12px; font-size: 14px;">+ Keranjang</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-zoom-logo" class="modal-zoom-logo">
+        <div class="konten-modal-zoom">
+            <span class="tombol-tutup-zoom" onclick="tutupModalLogo()">&times;</span>
+            <div class="layout-detail-zoom">
+                <img src="LOGO.png" alt="Logo Besar" class="gambar-logo-besar">
+                <div class="teks-welcome">WELCOME</div>
+                <div class="teks-sub-welcome">Selamat datang di Warung Online Tanjung Morawa 💐</div>
+            </div>
         </div>
     </div>
 
     <script>
+        const canvas = document.getElementById('canvas-efek');
+        const ctx = canvas.getContext('2d');
+        let partikelRoh = [];
+
+        function aturUkuranCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', aturUkuranCanvas);
+        aturUkuranCanvas();
+
+        function loopAnimasiCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = partikelRoh.length - 1; i >= 0; i--) {
+                let p = partikelRoh[i];
+                p.umur--;
+                p.ukuran *= 0.94;
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.ukuran, 0, Math.PI * 2);
+                ctx.fillStyle = p.warna;
+                ctx.shadowBlur = p.ukuran * 2;
+                ctx.shadowColor = p.warna;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                if (p.umur <= 0 || p.ukuran < 0.5) {
+                    partikelRoh.splice(i, 1);
+                }
+            }
+            requestAnimationFrame(loopAnimasiCanvas);
+        }
+        requestAnimationFrame(loopAnimasiCanvas);
+
+        // --- SISTEM GESER GELEMBUNG ---
+        const gelembung = document.getElementById('gelembung-keranjang');
+        let isDragging = false;
+        let startX, startY, initialX, initialY;
+        let hasMoved = false;
+
+        gelembung.addEventListener('mousedown', dragStart);
+        window.addEventListener('mousemove', dragMove);
+        window.addEventListener('mouseup', dragEnd);
+
+        gelembung.addEventListener('touchstart', dragStart, { passive: true });
+        window.addEventListener('touchmove', dragMove, { passive: false });
+        window.addEventListener('touchend', dragEnd);
+
+        function dragStart(e) {
+            isDragging = true;
+            hasMoved = false;
+            let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            let clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            startX = clientX;
+            startY = clientY;
+            let rect = gelembung.getBoundingClientRect();
+            initialX = rect.left;
+            initialY = rect.top;
+            gelembung.style.transition = 'none';
+        }
+
+        function dragMove(e) {
+            if (!isDragging) return;
+            let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            let clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            let dx = clientX - startX;
+            let dy = clientY - startY;
+            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) hasMoved = true;
+            let newX = initialX + dx;
+            let newY = initialY + dy;
+            newX = Math.max(0, Math.min(newX, window.innerWidth - gelembung.offsetWidth));
+            newY = Math.max(0, Math.min(newY, window.innerHeight - gelembung.offsetHeight));
+            gelembung.style.left = `${newX}px`;
+            gelembung.style.top = `${newY}px`;
+            gelembung.style.right = 'auto';
+            gelembung.style.bottom = 'auto';
+        }
+
+        function dragEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            gelembung.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            let rect = gelembung.getBoundingClientRect();
+            let tengahLayar = window.innerWidth / 2;
+            let gelembungTengahX = rect.left + (gelembung.offsetWidth / 2);
+            if (gelembungTengahX < tengahLayar) {
+                gelembung.style.left = '15px'; 
+            } else {
+                gelembung.style.left = `${window.innerWidth - gelembung.offsetWidth - 15}px`; 
+            }
+        }
+
+        function intersepsiKlikGelembung(e) {
+            if (hasMoved) e.preventDefault();
+        }
+
+        function aturPosisiAwalGelembung() {
+            let tengahVertikal = (window.innerHeight / 2) - 24; 
+            let mentokKanan = window.innerWidth - gelembung.offsetWidth - 15; 
+            gelembung.style.top = `${tengahVertikal}px`;
+            gelembung.style.left = `${mentokKanan}px`;
+            gelembung.style.bottom = 'auto';
+            gelembung.style.right = 'auto';
+        }
+
+        window.addEventListener('load', aturPosisiAwalGelembung);
+        window.addEventListener('resize', () => {
+            if (!isDragging) aturPosisiAwalGelembung();
+        });
+
         function updateTitik(element) {
             let lebarFoto = element.clientWidth;
             let posisiScroll = element.scrollLeft;
             let indexAktif = Math.round(posisiScroll / lebarFoto);
             let containerTitik = element.nextElementSibling;
+            if (!containerTitik) return;
             let daftarTitik = containerTitik.getElementsByClassName('titik');
-            
             for (let i = 0; i < daftarTitik.length; i++) {
                 if (i === indexAktif) {
                     daftarTitik[i].classList.add('aktif');
@@ -509,8 +905,9 @@
             }
         }
 
-        function cariProduk() {
-            let input = document.getElementById('input-cari').value.toLowerCase();
+        // --- REAL-TIME LIVE SEARCH ---
+        document.getElementById('input-cari').addEventListener('input', function() {
+            let input = this.value.toLowerCase();
             let kategoriWadah = document.getElementsByClassName('wadah-kategori');
             let pesanKosong = document.getElementById('pesan-kosong');
             let adaProdukGlobal = false;
@@ -521,7 +918,6 @@
 
                 for (let j = 0; j < kartu.length; j++) {
                     let namaProduk = kartu[j].getElementsByTagName('h3')[0].innerText.toLowerCase();
-                    
                     if (namaProduk.includes(input)) {
                         kartu[j].style.display = "flex";
                         adaProdukDiKategoriIni = true;
@@ -530,61 +926,188 @@
                         kartu[j].style.display = "none";
                     }
                 }
-
-                if (adaProdukDiKategoriIni) {
-                    kategoriWadah[i].style.display = "block";
-                } else {
-                    kategoriWadah[i].style.display = "none";
-                }
+                kategoriWadah[i].style.display = adaProdukDiKategoriIni ? "block" : "none";
             }
+            pesanKosong.style.display = adaProdukGlobal ? "none" : "block";
+        });
 
-            if (adaProdukGlobal) {
-                pesanKosong.style.display = "none";
+        // Fungsi untuk tombol 🔍 di navbar
+        function toggleKotakCari(event) {
+            event.stopPropagation(); 
+            let wadahCari = document.getElementById('wadah-cari');
+            let inputCari = document.getElementById('input-cari');
+            
+            wadahCari.classList.toggle('buka');
+            
+            if (wadahCari.classList.contains('buka')) {
+                inputCari.focus();
             } else {
-                pesanKosong.style.display = "block";
+                inputCari.value = "";
+                let eventInput = new Event('input');
+                inputCari.dispatchEvent(eventInput);
             }
+        }
+
+        // Fungsi khusus untuk tombol X di dalam kotak
+        function aksiTombolX() {
+            let inputCari = document.getElementById('input-cari');
+            
+            if (inputCari.value.length > 0) {
+                inputCari.value = "";
+                let eventInput = new Event('input');
+                inputCari.dispatchEvent(eventInput);
+            } else {
+                let wadahCari = document.getElementById('wadah-cari');
+                wadahCari.classList.remove('buka');
+            }
+        }
+
+        document.getElementById('wadah-cari').addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+
+        function bukaModalDetail(nama, hargaTeks, arrayGambar, id, hargaAngka) {
+            document.getElementById('modal-nama').innerText = nama;
+            document.getElementById('modal-harga').innerText = hargaTeks;
+            let sliderModal = document.getElementById('modal-slider-foto');
+            let containerTitikModal = document.getElementById('modal-titik-container');
+            sliderModal.innerHTML = "";
+            containerTitikModal.innerHTML = "";
+
+            arrayGambar.forEach((srcGambar, index) => {
+                let img = document.createElement('img');
+                img.src = srcGambar;
+                img.alt = `${nama} - ${index + 1}`;
+                sliderModal.appendChild(img);
+                let titik = document.createElement('span');
+                titik.className = index === 0 ? 'titik aktif' : 'titik';
+                containerTitikModal.appendChild(titik);
+            });
+
+            sliderModal.scrollLeft = 0;
+            let btnKeranjangModal = document.getElementById('modal-btn-keranjang');
+            btnKeranjangModal.onclick = function(event) {
+                tambahKeKeranjang(event, id, nama, hargaAngka, arrayGambar[0]);
+                tutupModalDetail();
+            };
+            document.getElementById('modal-zoom-produk').style.display = 'flex';
+        }
+
+        function tutupModalDetail() {
+            document.getElementById('modal-zoom-produk').style.display = 'none';
+        }
+
+        function bukaModalLogo() {
+            document.getElementById('modal-zoom-logo').style.display = 'flex';
+        }
+
+        function tutupModalLogo() {
+            document.getElementById('modal-zoom-logo').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            let modalProduk = document.getElementById('modal-zoom-produk');
+            let modalLogo = document.getElementById('modal-zoom-logo');
+            
+            if (event.target == modalProduk) tutupModalDetail();
+            if (event.target == modalLogo) tutupModalLogo();
         }
 
         function tambahKeKeranjang(event, id, nama, harga, gambar) {
             let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
             let itemSama = keranjang.find(item => item.id === id);
-            
             if (itemSama) {
                 itemSama.jumlah += 1;
             } else {
-                keranjang.push({ id, nama, harga, gambar, jumlah: 1 });
+                let running_item = { id, nama, harga, gambar, jumlah: 1 };
+                keranjang.push(running_item);
             }
-            
             localStorage.setItem('keranjang', JSON.stringify(keranjang));
 
-            let tombolKlik = event.currentTarget;
             let targetKeranjang = document.getElementById('target-keranjang');
-            let posTombol = tombolKlik.getBoundingClientRect();
             let posKeranjang = targetKeranjang.getBoundingClientRect();
+            let sumberGambarSrc = gambar;
+            let posAwalX, posAwalY, lebarAwal, tinggiAwal;
 
-            let bola = document.createElement('div');
-            bola.className = 'bola-terbang';
-            bola.style.left = `${posTombol.left + (posTombol.width / 2)}px`;
-            bola.style.top = `${posTombol.top + (posTombol.height / 2)}px`;
-            document.body.appendChild(bola);
+            let kartuProduk = event.currentTarget.closest('.card-produk');
+            
+            if (!kartuProduk) {
+                let semuaKartu = document.querySelectorAll('.card-produk');
+                for (let k of semuaKartu) {
+                    let h3 = k.querySelector('h3');
+                    if (h3 && h3.innerText === nama) {
+                        kartuProduk = k;
+                        break;
+                    }
+                }
+            }
+
+            if (kartuProduk) {
+                let imgElemen = kartuProduk.querySelector('.slider-foto img');
+                let posGambar = imgElemen.getBoundingClientRect();
+                sumberGambarSrc = imgElemen.src;
+                posAwalX = posGambar.left + (posGambar.width / 2);
+                posAwalY = posGambar.top + (posGambar.height / 2);
+                lebarAwal = posGambar.width;
+                tinggiAwal = posGambar.height;
+            } else {
+                let posTombol = event.currentTarget.getBoundingClientRect();
+                posAwalX = posTombol.left + (posTombol.width / 2);
+                posAwalY = posTombol.top + (posTombol.height / 2);
+                lebarAwal = 80;
+                tinggiAwal = 80;
+            }
+
+            let posAkhirX = posKeranjang.left + (posKeranjang.width / 2);
+            let posAkhirY = posKeranjang.top + (posKeranjang.height / 2);
+
+            let gambarTerbang = document.createElement('img');
+            gambarTerbang.className = 'gambar-terbang';
+            gambarTerbang.src = sumberGambarSrc;
+            gambarTerbang.style.width = `${lebarAwal}px`;
+            gambarTerbang.style.height = `${tinggiAwal}px`;
+            gambarTerbang.style.left = `${posAwalX}px`;
+            gambarTerbang.style.top = `${posAwalY}px`;
+            document.body.appendChild(gambarTerbang);
+
+            let waktuMulai = performance.now();
+            let durasiAnimasi = 850;
+
+            let intervalEkor = setInterval(() => {
+                let waktuSkrg = performance.now();
+                let selisih = waktuSkrg - waktuMulai;
+                let t = Math.min(selisih / durasiAnimasi, 1);
+                let posSkrg = gambarTerbang.getBoundingClientRect();
+                let xSkrg = posSkrg.left + (posSkrg.width / 2);
+                let ySkrg = posSkrg.top + (posSkrg.height / 2);
+
+                for (let i = 0; i < 3; i++) {
+                    partikelRoh.push({
+                        x: xSkrg + (Math.random() * 8 - 4),
+                        y: ySkrg + (Math.random() * 8 - 4),
+                        ukuran: (posSkrg.width * 0.35) + (Math.random() * 5),
+                        warna: Math.random() > 0.4 ? '#00ff66' : '#ffc400',
+                        umur: 25 + Math.random() * 15
+                    });
+                }
+                if (t >= 1) clearInterval(intervalEkor);
+            }, 16);
 
             setTimeout(() => {
-                bola.style.left = `${posKeranjang.left + (posKeranjang.width / 2)}px`;
-                bola.style.top = `${posKeranjang.top + (posKeranjang.height / 2)}px`;
-                bola.style.transform = 'translate(-50%, -50%) scale(0.2)'; 
-                bola.style.opacity = '0.3';
-            }, 20);
+                gambarTerbang.style.left = `${posAkhirX}px`;
+                gambarTerbang.style.top = `${posAkhirY}px`;
+                gambarTerbang.style.transform = 'translate(-50%, -50%) scale(0.05)'; 
+                gambarTerbang.style.opacity = '0.2'; 
+            }, 50);
 
             setTimeout(() => {
-                bola.remove(); 
+                clearInterval(intervalEkor);
+                gambarTerbang.remove(); 
                 updateBadgeKeranjang();
-
                 let badge = document.getElementById('total-item');
                 badge.classList.add('pop');
-                setTimeout(() => {
-                    badge.classList.remove('pop');
-                }, 200);
-            }, 800);
+                setTimeout(() => badge.classList.remove('pop'), 200);
+            }, durasiAnimasi + 100);
         }
 
         function updateBadgeKeranjang() {
